@@ -4,22 +4,20 @@ import { Notification } from "./Notification/Notification";
 import { Section } from "./Section/Section";
 import { useState } from "react";
 export const App = () => {
-  const [good, setGood] = useState(0);
-  const [bad, setBad] = useState(0);
-  const [neutral, setNeutral] = useState(0);
+  const [feedback, setFeedback] = useState({ good: 0, bad: 0, neutral: 0 });
+  const { good, bad, neutral } = feedback;
   const total = good + bad + neutral;
   const positivePercentage = Math.round((good / total) * 100);
   const onClickBtn = (e) => {
-    switch (e) {
-      case "good": return setGood(good + 1)
-      case "bad": return setBad(bad + 1)
-      case "neutral": return setNeutral(neutral + 1)
-      default: return;
-    }
+    setFeedback(prevState => {
+      return {
+        ...prevState, [e]: feedback[e] + 1
+      }
+    })
   }
   return (<div style={{ textAlign: "center" }}>
     <Section title={"Leave Feedback"}>
-      <FeedbackOptions options={{ good, neutral, bad }} onLeaveFeedback={onClickBtn} />
+      <FeedbackOptions options={feedback} onLeaveFeedback={onClickBtn} />
       <Section title={"Statistic"}></Section>
       {total ? (<Statistic good={good}
         neutral={neutral}
